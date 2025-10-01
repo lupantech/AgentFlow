@@ -1,6 +1,6 @@
 ## Supported LLM Engines
 
-We support a broad range of LLM engines in [`factory.py`](../../agentflow/agentflow/engine/factory.py), including vllm, GPT-4o, Claude 3.5 Sonnet, Gemini 1.5 Pro, and more.
+We support a broad range of LLM engines for agents and tools in [`factory.py`](../../agentflow/agentflow/engine/factory.py), including vllm, GPT-4o, Claude 3.5 Sonnet, Gemini 1.5 Pro, and more.
 
 | Model Family | Model_string Example | Supported Models | Official Model List |
 |--------------|---------------------|------------------|---------------------|
