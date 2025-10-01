@@ -101,7 +101,7 @@ bash train/serve_with_logs.sh
 bash train/train_with_logs.sh
 ```
 **Configuration:**
-All training hyperparameters are in `train/config.yaml` (model settings, tools, RL parameters, resources, etc.)
+All training hyperparameters are in [`train/config.yaml`](train/config.yaml) (model settings, tools, RL parameters, resources, etc.)
 
 ### AgentFlow Inference
 Serve the trained planner model with VLLM (here we deploy our 7B Flow-GRPO planner model):
@@ -114,6 +114,11 @@ Run inference on benchmark tasks:
 cd test
 bash exp/run_all_models_all_datasets.sh
 ```
+
+## Use your own model in AgentFlow 
++ Planner 
++ 其他 model 应该怎么修改 
+
 
 ## Core Contributors
 
