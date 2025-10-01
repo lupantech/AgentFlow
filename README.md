@@ -101,13 +101,13 @@ bash train/serve_with_logs.sh
 bash train/train_with_logs.sh
 ```
 
-We also provide a comprehensive logging guide to monitor training. See [logs.md](assets/doc/logs.md) for more details.
+We provide a comprehensive logging to monitor training. See [logs.md](assets/doc/logs.md) for more details.
 
 **Configuration:**
 All training hyperparameters are in [`train/config.yaml`](train/config.yaml) (model settings, tools, RL parameters, resources, etc.)
 
 ### AgentFlow Inference
-Serve the trained planner model with VLLM (here we deploy our 7B Flow-GRPO planner model):
+Serve the trained planner model with VLLM (here we deploy our [7B Flow-GRPO planner model](agentflow/AgentFlow-Planner-7B)):
 ```bash
 bash scripts/serve_vllm.sh
 ```
