@@ -14,7 +14,7 @@ This guide explains how to serve Qwen-2.5-7B-Instruct (or other models) locally 
 
 ## Step 1: Create a Serving Script
 
-We recommend using the format from `scripts/serve_vllm.sh`. Create a new script for serving the base Qwen model:
+We recommend using the format from `scripts/serve_vllm.sh`. Create a new script for serving the Qwen model in tmux:
 
 **Create `scripts/serve_vllm_qwen.sh`:**
 
@@ -97,7 +97,7 @@ INFO: Application startup complete.
 ---
 
 ## Step 3: Test the vLLM Server
-Example for Qwen-2.5-7B-Instruct served on p8001
+Example for Qwen-2.5-7B-Instruct served on port 8001
 ### Option 1: Quick Test with curl
 
 ```bash
