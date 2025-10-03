@@ -9,6 +9,39 @@ from typing import Any, Dict, List, Optional
 from agentflow.engine.factory import create_llm_engine
 from agentflow.models.formatters import ToolCommand
 
+# Tool name mapping: Static fallback mapping (long external names to internal)
+TOOL_NAME_MAPPING_LONG = {
+    "Generalist_Solution_Generator_Tool": {
+        "class_name": "Base_Generator_Tool",
+        "dir_name": "base_generator"
+    },
+    "Ground_Google_Search_Tool": {
+        "class_name": "Google_Search_Tool",
+        "dir_name": "google_search"
+    },
+    "Python_Code_Generator_Tool": {
+        "class_name": "Python_Coder_Tool",
+        "dir_name": "python_coder"
+    },
+    "Web_RAG_Search_Tool": {
+        "class_name": "Web_Search_Tool",
+        "dir_name": "web_search"
+    },
+    "Wikipedia_RAG_Search_Tool": {
+        "class_name": "Wikipedia_Search_Tool",
+        "dir_name": "wikipedia_search"
+    }
+}
+
+# Short to long mapping for fallback
+TOOL_NAME_MAPPING_SHORT = {
+    "Base_Generator_Tool": "Generalist_Solution_Generator_Tool",
+    "Google_Search_Tool": "Ground_Google_Search_Tool",
+    "Python_Coder_Tool": "Python_Code_Generator_Tool",
+    "Web_Search_Tool": "Web_RAG_Search_Tool",
+    "Wikipedia_Search_Tool": "Wikipedia_RAG_Search_Tool"
+}
+
 try:
     TimeoutError
 except NameError:
@@ -188,14 +221,34 @@ execution = tool.execute(query=["Methanol", "function of hyperbola", "Fermat's L
                 signal.alarm(0)  # Ensure alarm is disabled even if other exceptions occur
 
         # Import the tool module and instantiate it
-        module_name = f"tools.{tool_name.lower().replace('_tool', '')}.tool"
+        # tool_name could be either short or long name
+        # First check if it's a long name
+        if tool_name in TOOL_NAME_MAPPING_LONG:
+            dir_name = TOOL_NAME_MAPPING_LONG[tool_name]["dir_name"]
+            class_name = TOOL_NAME_MAPPING_LONG[tool_name]["class_name"]
+        # Then check if it's a short name (convert to long, then get internal)
+        elif tool_name in TOOL_NAME_MAPPING_SHORT:
+            long_name = TOOL_NAME_MAPPING_SHORT[tool_name]
+            if long_name in TOOL_NAME_MAPPING_LONG:
+                dir_name = TOOL_NAME_MAPPING_LONG[long_name]["dir_name"]
+                class_name = TOOL_NAME_MAPPING_LONG[long_name]["class_name"]
+            else:
+                # Shouldn't happen, but fallback
+                dir_name = tool_name.lower().replace('_tool', '')
+                class_name = tool_name
+        else:
+            # Fallback to original behavior for unmapped tools
+            dir_name = tool_name.lower().replace('_tool', '')
+            class_name = tool_name
+
+        module_name = f"tools.{dir_name}.tool"
 
         try:
             # Dynamically import the module
             module = importlib.import_module(module_name)
 
             # Get the tool class
-            tool_class = getattr(module, tool_name)
+            tool_class = getattr(module, class_name)
             
             tool = tool_class()
 

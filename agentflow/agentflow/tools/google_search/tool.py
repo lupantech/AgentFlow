@@ -14,6 +14,9 @@ import requests
 from typing import List
 import re
 
+# Tool name mapping - this defines the external name for this tool
+TOOL_NAME = "Ground_Google_Search_Tool"
+
 LIMITATIONS = """
 1. This tool is only suitable for general information search.
 2. This tool contains less domain specific information.
@@ -30,7 +33,7 @@ BEST_PRACTICES = """
 class Google_Search_Tool(BaseTool):
     def __init__(self, model_string="gemini-2.5-flash"):
         super().__init__(
-            tool_name="Google_Search_Tool",
+            tool_name=TOOL_NAME,
             tool_description="A web search tool powered by Google's Gemini AI that provides real-time information from the internet with citation support.",
             tool_version="1.0.0",
             input_types={

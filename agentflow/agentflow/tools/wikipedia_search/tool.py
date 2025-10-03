@@ -15,20 +15,23 @@ from agentflow.tools.web_search.tool import Web_Search_Tool
 from agentflow.tools.base import BaseTool
 from agentflow.engine.factory import create_llm_engine
 
-LIMITATION = """
-Wikipedia_Search_Tool has the following limitations:
+# Tool name mapping - this defines the external name for this tool
+TOOL_NAME = "Wikipedia_RAG_Search_Tool"
+
+LIMITATION = f"""
+{TOOL_NAME} has the following limitations:
 1. It is designed specifically for retrieving grounded information from Wikipedia pages only.
 2. Filtering of relevant pages depends on LLM model performance and may not always select optimal pages.
 3. The returned information accuracy depends on Wikipedia content quality.
 """
 
-BEST_PRACTICE = """
-For optimal results with Wikipedia_Search_Tool:
+BEST_PRACTICE = f"""
+For optimal results with {TOOL_NAME}:
 1. Use specific, targeted queries rather than broad or ambiguous questions.
 2. The tool automatically filters for relevant pages using LLM-based selection - trust the "relevant_pages" results.
 3. If initial results are insufficient, examine the "other_pages" section for additional potentially relevant content.
 4. Use this tool as part of a multi-step research process rather than a single source of truth.
-5. You can use the Web_Search_Tool to get more information from the URLs.
+5. You can use the {TOOL_NAME} to get more information from the URLs.
 """
 
 class Select_Relevant_Queries(BaseModel):
@@ -113,7 +116,7 @@ Output:
 class Wikipedia_Search_Tool(BaseTool):
     def __init__(self, model_string="gpt-4o-mini"):
         super().__init__(
-            tool_name="Wikipedia_Search_Tool",
+            tool_name=TOOL_NAME,
             tool_description="A tool that searches Wikipedia and returns relevant pages with their page titles, URLs, abstract, and retrieved information based on a given query.",
             tool_version="1.0.0",
             input_types={

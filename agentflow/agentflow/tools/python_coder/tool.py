@@ -14,6 +14,10 @@ import signal
 from contextlib import contextmanager
 
 import platform
+
+# Tool name mapping - this defines the external name for this tool
+TOOL_NAME = "Python_Code_Generator_Tool"
+
 def is_windows_os():
     system=platform.system()
     return system == 'Windows'
@@ -53,8 +57,8 @@ def timeout(seconds):
             signal.signal(signal.SIGALRM, original_handler)
 
 
-LIMITATION = """
-The Python_Coder_Tool has several limitations: 
+LIMITATION = f"""
+The {TOOL_NAME} has several limitations:
 1. Restricted to basic Python arithmetic operations and built-in mathematical functions.
 2. Cannot use any external libraries or modules, including those in the Python standard library.
 3. Limited to simple mathematical calculations and problems.
@@ -68,8 +72,8 @@ The Python_Coder_Tool has several limitations:
 11. DO NOT generate loop output.
 """
 
-BEST_PRACTICE = """
-For optimal results with the Python_Coder_Tool:
+BEST_PRACTICE = f"""
+For optimal results with the {TOOL_NAME}:
 1. Provide clear and specific queries that describe the desired mathematical calculation.
 2. Include all necessary numerical inputs directly in the query string.
 3. Keep tasks focused on basic arithmetic, algebraic calculations, or simple mathematical algorithms.
@@ -82,7 +86,7 @@ class Python_Coder_Tool(BaseTool):
     require_llm_engine = True
     def __init__(self, model_string="dashscope-qwen2.5-coder-7b-instruct"):
         super().__init__(
-            tool_name="Python_Coder_Tool",
+            tool_name=TOOL_NAME,
             tool_description="A tool that generates and executes simple Python code snippets for basic arithmetical calculations and math-related problems. The generated code runs in a highly restricted environment with only basic mathematical operations available.",
             tool_version="1.0.0",
             input_types={

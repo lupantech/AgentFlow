@@ -2,13 +2,15 @@ import os
 from agentflow.tools.base import BaseTool
 from agentflow.engine.factory import create_llm_engine
 
+# Tool name mapping - this defines the external name for this tool
+TOOL_NAME = "Generalist_Solution_Generator_Tool"
 
-LIMITATION = """
-The Base_Generator_Tool may provide hallucinated or incorrect responses.
+LIMITATION = f"""
+The {TOOL_NAME} may provide hallucinated or incorrect responses.
 """
 
-BEST_PRACTICE = """
-For optimal results with the Base_Generator_Tool:
+BEST_PRACTICE = f"""
+For optimal results with the {TOOL_NAME}:
 1. Use it for general queries or tasks that don't require specialized knowledge or specific tools in the toolbox.
 2. Provide clear, specific query.   
 3. Use it to answer the original query through step by step reasoning for tasks without complex or multi-step reasoning.
@@ -22,7 +24,7 @@ class Base_Generator_Tool(BaseTool):
 
     def __init__(self, model_string="gpt-4o-mini"):
         super().__init__(
-            tool_name="Base_Generator_Tool",
+            tool_name=TOOL_NAME,
             tool_description="A generalized tool that takes query from the user, and answers the question step by step to the best of its ability. It can also accept an image.",
             tool_version="1.0.0",
             input_types={

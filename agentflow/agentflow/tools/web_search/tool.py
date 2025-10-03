@@ -10,8 +10,11 @@ from agentflow.engine.factory import create_llm_engine
 
 load_dotenv()
 
-LIMITATION = """
-The Web_Search_Tool has several limitations: 
+# Tool name mapping - this defines the external name for this tool
+TOOL_NAME = "Web_RAG_Search_Tool"
+
+LIMITATION = f"""
+The {TOOL_NAME} has several limitations: 
 1) Requires valid URLs that are accessible and contain text content. 
 2) May not work with JavaScript-heavy websites or those requiring authentication. 
 3) Performance depends on the quality and relevance of the website content. 
@@ -20,8 +23,8 @@ The Web_Search_Tool has several limitations:
 6) Requires OpenAI API access for embeddings and LLM generation.
 """
 
-BEST_PRACTICE = """
-For optimal results with the Web_Search_Tool:
+BEST_PRACTICE = f"""
+For optimal results with the {TOOL_NAME}:
 1) Use specific, targeted queries rather than broad questions.
 2) Ensure the URL is accessible and contains relevant information.
 3) Prefer websites with well-structured, text-rich content.
@@ -73,7 +76,7 @@ class Web_Search_Tool(BaseTool):
 
     def __init__(self, model_string="gpt-4o-mini"):
         super().__init__(
-            tool_name="Web_Search_Tool",
+            tool_name=TOOL_NAME,
             tool_description="A specialized tool for answering questions by retrieving relevant information from a given website using RAG (Retrieval-Augmented Generation).",
             tool_version="1.0.0",
             input_types={
