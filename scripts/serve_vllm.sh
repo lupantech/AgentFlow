@@ -9,7 +9,7 @@
 #   - Port 8000
 # ===========================================================================
 
-MODEL="agentflow/AgentFlow-Planner-7B"
+MODEL="AgentFlow/agentflow-planner-7b"
 GPU="0"
 PORT=8000
 TMUX_SESSION="vllm_agentflow"

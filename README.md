@@ -162,7 +162,7 @@ We provide a comprehensive logging to monitor training. See [logs.md](assets/doc
 
 
 ### AgentFlow Benchmark 
-Serve the trained planner model with VLLM (here we deploy our [7B Flow-GRPO planner model](agentflow/AgentFlow-Planner-7B)):
+Serve the trained planner model with VLLM (here we deploy our [7B Flow-GRPO planner model](https://huggingface.co/AgentFlow/agentflow-planner-7b)):
 ```bash
 bash scripts/serve_vllm.sh
 ```

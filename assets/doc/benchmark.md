@@ -13,17 +13,17 @@ bash scripts/serve_vllm.sh
 
 You can configure the following parameters in [`scripts/serve_vllm.sh`](../../scripts/serve_vllm.sh):
 
-| Parameter | Description | Default |
-|-----------|-------------|---------|
-| MODEL | Model path to serve (HuggingFace or local) | `"agentflow/AgentFlow-Planner-7B"` |
-| GPU | GPU device ID(s) to use | `"0"` |
-| PORT | VLLM serving port | `8000` |
-| TP | Tensor-parallel-size | `1` |
+| Parameter | Description | Default                            |
+|-----------|-------------|------------------------------------|
+| MODEL | Model path to serve (HuggingFace or local) | `"AgentFlow/agentflow-planner-7b"` |
+| GPU | GPU device ID(s) to use | `"0"`                              |
+| PORT | VLLM serving port | `8000`                             |
+| TP | Tensor-parallel-size | `1`                                |
 
 
 ### Running Benchmark Experiments
 We provide an one-click script to run all benchmarks at once. It executes our agentic system on these benchmarks, saves the outputs, and automatically invokes the LLM for evaluation:
-```python
+```bash
 cd test
 bash exp/run_all_models_all_datasets.sh
 ```
@@ -33,7 +33,7 @@ bash exp/run_all_models_all_datasets.sh
 You can configure benchmark settings in [`test/exp/run_all_models_all_datasets.sh`](../../test/exp/run_all_models_all_datasets.sh).
 
 Partial Content of [`test/exp/run_all_models_all_datasets.sh`](../../test/exp/run_all_models_all_datasets.sh):
-```python
+```bash
 #!/bin/bash
 # Usage: bash exp/run_all_models_all_datasets.sh
 # Model format: "port:modelname,label,enabled_tools,tool_engines"
@@ -66,7 +66,7 @@ TASKS=(
 # - tool_engines: use | as separator (will be converted to comma)
 # Example: "8000:vllm-IPF/model,label,Tool1|Tool2|Tool3,engine1|engine2|Default"
 MODELS=(
-    "8000:vllm-agentflow/AgentFlow-Planner-7B,AgentFlow-7B,Base_Generator_Tool|Python_Coder_Tool|Google_Search_Tool|Wikipedia_Search_Tool,dashscope-qwen2.5-7b-instruct|dashscope-qwen2.5-7b-instruct|Default|Default"
+    "8000:vllm-AgentFlow/agentflow-planner-7b,AgentFlow-7B,Base_Generator_Tool|Python_Coder_Tool|Google_Search_Tool|Wikipedia_Search_Tool,dashscope-qwen2.5-7b-instruct|dashscope-qwen2.5-7b-instruct|Default|Default"
 )
 ```
 
@@ -95,7 +95,7 @@ TASKS=(
 Specify models with their configurations:
 ```bash
 MODELS=(
-      "8000:vllm-agentflow/AgentFlow-Planner-7B,AgentFlow-7B,Base_Generator_Tool|Python_Coder_Tool|Google_Search_Tool|Wikipedia_Search_Tool,dashscope-qwen2.5-7b-instruct|dashscope-qwen2.5-7b-instruct|Default|Default"
+      "8000:vllm-AgentFlow/agentflow-planner-7b,AgentFlow-7B,Base_Generator_Tool|Python_Coder_Tool|Google_Search_Tool|Wikipedia_Search_Tool,dashscope-qwen2.5-7b-instruct|dashscope-qwen2.5-7b-instruct|Default|Default"
 )
 ```
 

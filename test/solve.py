@@ -317,8 +317,8 @@ class Solver:
             print(f"==>Total execution time: {time.time() - start_time:.2f} seconds")
             
 def parse_arguments():
-    parser = argparse.ArgumentParser(description="Run the octotools demo with specified parameters.")
-    parser.add_argument("--llm_engine_name", default="vllm-checkpoints/AgentLightning_general/general_octo_all_7B_useklloss_gpt4o-mini-tools/global_step_28/actor/huggingface", help="LLM engine name.")
+    parser = argparse.ArgumentParser(description="Run the agentflow demo with specified parameters.")
+    parser.add_argument("--llm_engine_name", default="gpt-4o", help="LLM engine name.")
     parser.add_argument("--max_tokens", type=int, default=2048, help="Maximum tokens for LLM generation.")
     parser.add_argument("--run_baseline_only", type=bool, default=False, help="Run only the baseline (no toolbox).")
     parser.add_argument("--task", default="minitoolbench", help="Task to run.")
