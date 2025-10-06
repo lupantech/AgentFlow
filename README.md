@@ -82,7 +82,6 @@ Explore more in our [paper](#) or [project page](https://agentflow.stanford.edu/
 - [🙏 Acknowledgements](#-acknowledgements)
 - [🤝 Contributing](#-contributing)
 - [🚀 Star History](#-star-history)
-- [↑ Back to Top](#readme-top)
 
 ## ⚙️ Setup
 ### Installation
