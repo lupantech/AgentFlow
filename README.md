@@ -1,11 +1,7 @@
-# AgentFlow 
-
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="assets/img/logo.png">
-    <img alt="AgentFlow" src="assets/img/logo.png" width=20%>
-  </picture>
-</p>
+<h1>
+  <img src="assets/img/logo.png" alt="AgentFlow" width="35" align="left" style="margin-right: 15px;">
+  AgentFlow
+</h1>
 
 <h3 align="center">
 AgentFlow: In-The-Flow Agentic System Optimization for Effective Planning and Tool Use.
