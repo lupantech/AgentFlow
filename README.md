@@ -2,8 +2,8 @@
 
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="assets/imgs/logo.png">
-    <img alt="VerlTool" src="assets/imgs/logo.png" width=20%>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/img/logo.png">
+    <img alt="AgentFlow" src="assets/img/logo.png" width=20%>
   </picture>
 </p>
 
