@@ -18,7 +18,7 @@ AgentFlow: In-the-Flow Agentic System Optimization for Effective Planning and To
     <a href="https://huggingface.co/spaces/AgentFlow/agentflow"><img src="https://img.shields.io/badge/Gradio-Demo-F97316.svg?logo=gradio" alt="Gradio Demo"></a>
     <a href="https://huggingface.co/AgentFlow"><img src="https://img.shields.io/badge/Huggingface-Model-FFD21E.svg?logo=huggingface" alt="Huggingface Model"></a>
     <a href="https://agentflow.stanford.edu/"><img src="https://img.shields.io/badge/Website-AgentFlow-E5426E?logo=kashflow" alt="Website"></a>
-    <a href=""><img src="https://img.shields.io/badge/X-AgentFlow-2176BC.svg?logo=x" alt="X"></a>
+    <a href=""><img src="https://img.shields.io/badge/Coverage-AgentFlow-2176BC.svg?logo=x" alt="X"></a>
     <a href="https://agentflowco.slack.com/ssb/redirect"><img src="https://img.shields.io/badge/Slack-AgentFlow-D41544.svg?logo=slack" alt="Slack"></a>
   </p>
 <!--- BADGES: END --->
