@@ -321,6 +321,10 @@ We are also looking forward to your feedback and suggestions!
 }
 ```
 
+## ⭐ Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=lupantech/AgentFlow&type=Date)](https://star-history.com/#lupantech/AgentFlow&Date)
+
 <p align="right" style="font-size: 14px; margin-top: 20px;">
   <a href="#readme-top" style="text-decoration: none; font-weight: bold;">
     ↑ Back to Top ↑
