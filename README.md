@@ -30,6 +30,7 @@ AgentFlow: In-the-Flow Agentic System Optimization for Effective Planning and To
 
 
 ## 📰 News
+- **Oct. 10, 2025** - Honored to join the [Agent-Lightning Community](https://github.com/microsoft/agent-lightning#-community-projects)!
 - **Oct. 10, 2025** - Our X [post](https://x.com/lupantech/status/1976016000345919803) received 1K+ likes!
 - **Oct. 8, 2025** - Featured as Huggingface [Daily Paper #2](https://huggingface.co/papers/2510.05592)
 - **Oct. 7, 2025** - [Paper](https://arxiv.org/abs/2510.05592) released on arXiv
