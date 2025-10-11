@@ -313,11 +313,11 @@ We are also looking forward to your feedback and suggestions!
 
 ## 📚 Citation
 ```bibtex
-@article{li2025intheflow,
-    title = {In-the-Flow Agentic System Optimization for Effective Planning and Tool Use},
-    author = {Li, Zhuofeng and Zhang, Haoxiang and Han, Seungju and Liu, Sheng and Xie, Jianwen and Zhang, Yu and Choi, Yejin and Zou, James and Lu, Pan},
-    journal = {arXiv preprint arXiv:2510.05592},
-    year = {2025}
+@article{li2025flow,
+  title={In-the-Flow Agentic System Optimization for Effective Planning and Tool Use},
+  author={Li, Zhuofeng and Zhang, Haoxiang and Han, Seungju and Liu, Sheng and Xie, Jianwen and Zhang, Yu and Choi, Yejin and Zou, James and Lu, Pan},
+  journal={arXiv preprint arXiv:2510.05592},
+  year={2025}
 }
 ```
 
