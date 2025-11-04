@@ -1,30 +1,30 @@
 # config.yaml
 env:
-  OPENAI_API_KEY: "YOUR_ONENAI_API" # not that neccesary
+  OPENAI_API_KEY: "YOUR_ONENAI_API" # Not that neccesary.
   CUDA_VISIBLE_DEVICES: '0,1,2,3,4,5,6,7'
   HYDRA_FULL_ERROR: 1
   N_GPUS: 8
-  BASE_MODEL: 'Qwen/Qwen2.5-7B-Instruct' # This model here would be served in vllm used by `agentflow.port` and serve as base model of rollout in the training process. 
+  BASE_MODEL: 'Qwen/Qwen2.5-7B-Instruct' # This model will be served in vllm, used by `agentflow.port`, and serve as the base model of rollout in the training process. 
   ROLLOUT_TP_SIZE: 1
   EXPERIMENT_NAME: 'rollout_all_7B_useklloss'
   PROJECT_NAME: 'AgentFlow_general'
-  BASE_DATA_DIR: 'data' # where to find train and val data
+  BASE_DATA_DIR: 'data' # This is where to find training and eval data.
   VERBOSITY: 'DEBUG'
   N_WORKERS: 16
-  ENABLE_TOOLS: ["Base_Generator_Tool","Python_Coder_Tool","Google_Search_Tool","Wikipedia_Search_Tool"] # if openai API is on then can add tools
-  TOOL_ENGINE: ["dashscope","dashscope","Default","Default"] # Default means use tool.py 's default params, you can set "dashscope" as qwen7B, "gpt-40-mini" for gpt, "self" as the training BASE_MODEL
-  # TOOL_ENGINE: ["vllm-Qwen/Qwen2.5-7B-Instruct","vllm-Qwen/Qwen2.5-7B-Instruct","Default","Default"] # if you are not using dashscope api., you can use vllm to serve the qwen2.5-7b-instruct in your own server and please redsign the llm_engine port. .
-  TOOL_STEPS: 3 # do not too long 3-5 is good cause it may surge the context
+  ENABLE_TOOLS: ["Base_Generator_Tool","Python_Coder_Tool","Google_Search_Tool","Wikipedia_Search_Tool"] # If OpenAI API is on, then it can add tools.
+  TOOL_ENGINE: ["dashscope","dashscope","Default","Default"] # Default means use tool.py's default params. You can set "dashscope" as qwen7B, "gpt-4o-mini" for gpt, or "self" as the training BASE_MODEL.
+  # TOOL_ENGINE: ["vllm-Qwen/Qwen2.5-7B-Instruct","vllm-Qwen/Qwen2.5-7B-Instruct","Default","Default"] # If you are not using the Dashscope API, you can use VLLM to serve qwen2.5-7b-instruct on your own server and redesign the llm_engine port.
+  TOOL_STEPS: 3 # Do not increase beyond 5. It may overflow context.
   TEST_TEMPERATURE: 0.0
-  TRAIN_TEMPERATURE: 0.7 # 0.7 - 0.5 is good please check whether every planner and the executor are correctly transfered this parameter
-  OUTPUT_TYPE: "direct" # different output mode in rollout's last output, not that neccesary if we are searching and math reasoning cause answer should be short
-  AGENT_MAX_TIMEOUT: 500 # donot too short 300-500 is good. When steps extends, time surges. 
+  TRAIN_TEMPERATURE: 0.7 # 0.7 - 0.5 is good. Please check whether every planner and the executor have the this parameter correctly transfered.
+  OUTPUT_TYPE: "direct" # Different output mode in rollout's last output, not that neccesary if we are searching and math reasoning because answer should be short.         
+  AGENT_MAX_TIMEOUT: 500 # 300-500 is good. When steps extend beyond this limit, there may be errors. 
 
 python_args:
-  agentflow.port: 9999 # it will both send to agent serving and training. 
+  agentflow.port: 9999 # This will be sent to agent serving and training. 
   algorithm.adv_estimator: 'grpo'
-  data.train_files: '${BASE_DATA_DIR}/train/combined_train.parquet' # mixed nq search and mathard, shuffled
-  data.val_files: '${BASE_DATA_DIR}/val/aime24.parquet' # AIME24 for fast check, the first epoch maybe down due to async start and fiel lock
+  data.train_files: '${BASE_DATA_DIR}/train/combined_train.parquet' # Mixed nq search and mathard, shuffled.
+  data.val_files: '${BASE_DATA_DIR}/val/aime24.parquet' # AIME24 for fast check, the first epoch maybe down due to async start and file lock.
   actor_rollout_ref.rollout.tensor_model_parallel_size: '${ROLLOUT_TP_SIZE}'
   trainer.n_gpus_per_node: '${N_GPUS}'
   data.train_batch_size: 32
@@ -34,22 +34,22 @@ python_args:
   actor_rollout_ref.rollout.log_prob_micro_batch_size_per_gpu: 4
   actor_rollout_ref.rollout.multi_turn.format: 'hermes'
   actor_rollout_ref.model.path: '${BASE_MODEL}'
-  data.max_prompt_length: 18432 # it's safe here because in qwen-plannr&executor, dashscope/4o-mini in tools this length will never shut
-  data.max_response_length: 2048 # make sure this will be transfered roll way down. 
-  data.truncation: 'truncate' # if set "error" then it will shut the process when input length exceed the max_prompt_length+max_response_length
-  trainer.val_before_train: True # if restart from a ckpt then dont need to save time
+  data.max_prompt_length: 18432 # This is safe here because in qwen-plannr&executor and dashscope/4o-mini's tools will never prematurely end the output at this length.
+  data.max_response_length: 2048 # Make sure this will be transfered all the way down.
+  data.truncation: 'truncate' # If this is set to "error", then the process will be shut down when the input length exceeds the max_prompt_length + max_response_length.
+  trainer.val_before_train: True # If you restart from a CKPT, then you don't need to save time.
   actor_rollout_ref.actor.optim.lr: 1e-6
   actor_rollout_ref.model.use_remove_padding: True
   actor_rollout_ref.actor.use_kl_loss: True
   actor_rollout_ref.actor.kl_loss_coef: 0.001
-  actor_rollout_ref.actor.entropy_coeff: 0.0 # maybe this can somehow prevent model repetition? 
+  actor_rollout_ref.actor.entropy_coeff: 0.0 # Maybe this can somehow prevent model repetition? 
   actor_rollout_ref.actor.clip_ratio_low: 0.2
   actor_rollout_ref.actor.clip_ratio_high: 0.3
   actor_rollout_ref.model.enable_gradient_checkpointing: True
   actor_rollout_ref.actor.fsdp_config.param_offload: False
   actor_rollout_ref.actor.fsdp_config.optimizer_offload: False
   actor_rollout_ref.rollout.name: 'vllm'
-  actor_rollout_ref.rollout.gpu_memory_utilization: 0.6 # 0.55-0.65 is fine, too small the BASE_MODEL inference will be slow, too large, the kvcache and other extra saved logic will cause OOM
+  actor_rollout_ref.rollout.gpu_memory_utilization: 0.6 # 0.55-0.65 is fine. If it's too small, the BASE_MODEL inference will be slow. If it's too large, the KV cache and other extra saved logic will cause OOM.
   actor_rollout_ref.ref.log_prob_micro_batch_size_per_gpu: 4
   actor_rollout_ref.ref.fsdp_config.param_offload: False
   algorithm.use_kl_in_reward: False
@@ -58,6 +58,6 @@ python_args:
   trainer.project_name: '${PROJECT_NAME}'
   trainer.experiment_name: '${EXPERIMENT_NAME}'
   trainer.nnodes: 1
-  trainer.save_freq: 2 # for safe and ensure ckpt must exist
+  trainer.save_freq: 2 # This is to ensure the CKPT exists.
   trainer.test_freq: 2 
   trainer.total_epochs: 5
