@@ -9,6 +9,11 @@ class Memory:
         self.actions: Dict[str, Dict[str, Any]] = {}
         self._init_file_types()
 
+    def reset(self):
+        self.query = None
+        self.files = []
+        self.actions = {}
+
     def set_query(self, query: str) -> None:
         if not isinstance(query, str):
             raise TypeError("Query must be a string")

@@ -48,6 +48,9 @@ class Solver:
         # Update cache directory for the executor
         self.executor.set_query_cache_dir(self.root_cache_dir)
 
+        # Reset memory for new problem
+        self.memory.reset()
+
         # Initialize json_data with basic problem information
         json_data = {
             "query": question,
