@@ -484,7 +484,7 @@ if __name__ == "__main__":
     import time
 
     enabled_tools = ["Base_Generator_Tool", "Python_Coder_Tool", "Google_Search_Tool", "Wikipedia_Search_Tool"]
-    tool_engine = ["dashscope", "dashscope", "Default", "Default"]
+    tool_engine = ["gpt-4o-mini", "gpt-4o-mini", "Default", "Default"]
 
     print("\n" + "="*80)
     print("PERFORMANCE COMPARISON: Serial vs Parallel Tool Loading")

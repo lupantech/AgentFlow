@@ -84,7 +84,7 @@ For optimal results with the {TOOL_NAME}:
 
 class Python_Coder_Tool(BaseTool):
     require_llm_engine = True
-    def __init__(self, model_string="dashscope-qwen2.5-coder-7b-instruct"):
+    def __init__(self, model_string="gpt-4o"):
         super().__init__(
             tool_name=TOOL_NAME,
             tool_description="A tool that generates and executes simple Python code snippets for basic arithmetical calculations and math-related problems. The generated code runs in a highly restricted environment with only basic mathematical operations available.",
@@ -337,9 +337,9 @@ if __name__ == "__main__":
     # Example usage of the Python_Coder_Tool
     # tool = Python_Coder_Tool()
 
-    # tool = Python_Coder_Tool(model_string="gpt-4o-mini") # NOTE: strong LLM for tool
+    tool = Python_Coder_Tool(model_string="gpt-4o-mini") # NOTE: strong LLM for tool
     # tool = Python_Coder_Tool(model_string="gemini-1.5-flash") # NOTE: weak 8B model for tool
-    tool = Python_Coder_Tool(model_string="dashscope") # NOTE: weak Qwen2.5-7B model for tool
+    # tool = Python_Coder_Tool(model_string="dashscope") # NOTE: weak Qwen2.5-7B model for tool
     # tool = Python_Coder_Tool(model_string="together-Qwen/Qwen2.5-7B-Instruct") # NOTE: weak Qwen2.5-7B model for tool
 
     # Get tool metadata

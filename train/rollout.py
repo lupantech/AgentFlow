@@ -41,7 +41,7 @@ class AgentFlowRollout:
         llm_engine_name: str = "gpt-4o",
         enabled_tools: list[str] = ["Base_Generator_Tool"],
         tool_engine: list[str] = ["Default"],
-        model_engine: list[str] = ["trainable", "dashscope", "dashscope"],  # [planner_main, planner_fixed, executor]
+        model_engine: list[str] = ["trainable", "gpt-4o", "gpt-4o"],  # [planner_main, planner_fixed, executor]
         output_types: str = "final,direct",
         max_steps: int = 3,
         max_time: int = 500,
@@ -131,8 +131,8 @@ class Rollout(LitAgent):
     rollout_n: int = 8,
     batch_size: int = 16,
     enabled_tools: list[str] =["Base_Generator_Tool","Python_Coder_Tool","Google_Search_Tool","Wikipedia_Search_Tool"],
-    tool_engine: list[str] = ["dashscope","dashscope","Default","Default"],
-    model_engine: list[str] = ["trainable", "dashscope", "dashscope"],  # [planner_main, planner_fixed, executor]
+    tool_engine: list[str] = ["gpt-4o","gpt-4o","Default","Default"],
+    model_engine: list[str] = ["trainable", "gpt-4o", "gpt-4o"],  # [planner_main, planner_fixed, executor]
     max_steps: int = 3,
     max_tokens: int = 2048,
     train_temperature: float = 0.7,
