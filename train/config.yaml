@@ -12,9 +12,10 @@ env:
   VERBOSITY: 'DEBUG'
   N_WORKERS: 16
   ENABLE_TOOLS: ["Base_Generator_Tool","Python_Coder_Tool","Google_Search_Tool","Wikipedia_Search_Tool"] # If OpenAI API is on, then it can add tools.
-  TOOL_ENGINE: ["gpt-4o-mini","dashscope-qwen2.5-7b-coder-instruct","Default","Default"] # Default means use tool.py's default params. You can set "dashscope" as qwen7B, "gpt-4o-mini" for gpt, or "self" as the training BASE_MODEL.
+  # TOOL_ENGINE: ["gpt-4o-mini","dashscope-qwen2.5-7b-coder-instruct","Default","Default"] # Default means use tool.py's default params. You can set "dashscope" as qwen7B, "gpt-4o-mini" for gpt, or "self" as the training BASE_MODEL.
   # TOOL_ENGINE: ["vllm-Qwen/Qwen2.5-7B-Instruct","vllm-Qwen/Qwen2.5-7B-Instruct","Default","Default"] # If you are not using the Dashscope API, you can use VLLM to serve qwen2.5-7b-instruct on your own server and redesign the llm_engine port.
-  MODEL_ENGINE: ["trainable","dashscope","dashscope","dashscope"] # [planner_main, planner_fixed, verifier, executor]. "trainable" means use the BASE_MODEL with different temperatures for train/test. You can also specify specific models like "dashscope", "gpt-4o-mini", etc.
+  MODEL_ENGINE: ["trainable","gpt-4o-mini","gpt-4o-mini","gpt-4o-mini"] 
+  # MODEL_ENGINE: ["trainable","dashscope","dashscope","dashscope"] # [planner_main, planner_fixed, verifier, executor]. "trainable" means use the BASE_MODEL with different temperatures for train/test. You can also specify specific models like "dashscope", "gpt-4o-mini", etc.
   TOOL_STEPS: 3 # Do not increase beyond 5. It may overflow context.
   TEST_TEMPERATURE: 0.0
   TRAIN_TEMPERATURE: 0.7 # 0.7 - 0.5 is good. Please check whether every planner and the executor have the this parameter correctly transfered.

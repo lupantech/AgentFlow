@@ -11,7 +11,7 @@ from agentflow.models.memory import Memory
 
 
 class Planner:
-    def __init__(self, llm_engine_name: str, llm_engine_fixed_name: str = "dashscope",
+    def __init__(self, llm_engine_name: str, llm_engine_fixed_name: str = "gpt-4o",
                  toolbox_metadata: dict = None, available_tools: List = None,
                  verbose: bool = False, base_url: str = None, is_multimodal: bool = False,
                  check_model: bool = True, temperature : float = .0):

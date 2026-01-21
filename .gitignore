@@ -9,7 +9,7 @@ tmp/
 checkpoints/
 triples/
 triples_texts/
-# *.json
+*.json
 *.log
 
 # Byte-compiled / optimized / DLL files

@@ -198,7 +198,7 @@ class Solver:
 def construct_solver(llm_engine_name : str = "gpt-4o",
                      enabled_tools : list[str] = ["all"],
                      tool_engine: list[str] = ["Default"],
-                     model_engine: list[str] = ["trainable", "dashscope", "dashscope", "dashscope"],  # [planner_main, planner_fixed, verifier, executor]
+                     model_engine: list[str] = ["trainable", "gpt-4o", "gpt-4o", "gpt-4o"],  # [planner_main, planner_fixed, verifier, executor]
                      output_types : str = "final,direct",
                      max_steps : int = 10,
                      max_time : int = 300,
@@ -295,7 +295,7 @@ def parse_arguments():
     return parser.parse_args()
     
 def main(args):
-    tool_engine=["dashscope-qwen2.5-3b-instruct","dashscope-qwen2.5-3b-instruct","Default","Default"]
+    tool_engine=["gpt-4o-mini","gpt-4o-mini","Default","Default"]
     solver = construct_solver(
         llm_engine_name=args.llm_engine_name,
         enabled_tools=["Base_Generator_Tool","Python_Coder_Tool","Google_Search_Tool","Wikipedia_Search_Tool"],

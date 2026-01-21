@@ -68,29 +68,6 @@ Excited to have a tutorial video for AgentFlow covered by [Discover AI](https://
 - 🎯 **Flow-GRPO Algorithm** – Enables **in-the-flow agent optimization** for **long-horizon reasoning tasks** with sparse rewards.
 - 📈 **Proven Results** – **AgentFlow (7B Backbone)** beats top baselines on 10 benchmarks, with **+14.9% search**, **+14.0% agentic**, **+14.5% math**, **+4.1% science**, even outperforming ~200B-parameter **GPT-4o**.
 
-## 🏆 Experiments
-
-### 📊 Main Results
-**AgentFlow (Qwen-2.5-7B-Instruct Backbone)** outperforms top baselines on 10 benchmarks:  
-- **+14.9%** on search  
-- **+14.0%** on agentic reasoning  
-- **+14.5%** on math  
-- **+4.1%** on science  
-
-💡 Even surpasses larger proprietary models like **GPT-4o (~200B)**.
-
-![main_table1](assets/img/maintable1.png)
-![main_table2](assets/img/maintable2.png)
-
-### 🔍 In-Depth Analysis
-- Improved planning and decision-making  
-- Enhanced tool-calling reliability  
-- Positive scaling trends with model size & reasoning turns  
-
-Explore more in our [paper](https://arxiv.org/abs/2510.05592) or [project page](https://agentflow.stanford.edu/).
-
-![tool_call](assets/img/tool_call.png)
-
 ---
 
 ## 📑 Table of Contents
@@ -127,8 +104,8 @@ sudo apt-get install parallel
 Copy the `.env.template` file from `agentflow/.env.template` and rename it to `.env`, then place it in the `agentflow/` folder. Update the following variables with your own API keys:
 - `OPENAI_API_KEY` (for judging reasponse)
 - `GOOGLE_API_KEY` (for Google Search tool)
-- `DASHSCOPE_API_KEY` (for calling Qwen-2.5-7B-Instruct as engine for agents and tools)
-- `TOGETHER_API_KEY` (alternative for calling Qwen-2.5-7B-Instruct as engine for agents and tools - recommended for international users)
+- `DASHSCOPE_API_KEY` ([optional] for calling Qwen-2.5-7B-Instruct as engine for agents and tools)
+- `TOGETHER_API_KEY` ([optional] alternative for calling Qwen-2.5-7B-Instruct as engine for agents and tools - recommended for international users)
 - More ways: serve Qwen2.5-7B-instruct model with vLLM (details refer to [`serve_vllm_local.md`](assets/doc/serve_vllm_local.md)).
 
 Please check [API Key Setup Guide](assets/doc/api_key.md) for detailed instructions on how to obtain these keys.
@@ -138,27 +115,69 @@ cp agentflow/.env.template agentflow/.env
 # Then edit agentflow/.env with your API keys
 ```
 
+## 🔍 Check Before You Run (Recommended)
+Before running inference or training, we recommend verifying that your API keys and environment are properly configured.
+
+### 🛠️ Test Tools
+Run the following command to test all integrated tools:
+```bash
+cd agentflow/agentflow
+bash ./tools/test_all_tools.sh
+```
+Example output:
+```text
+Testing all tools...
+✅ base_generator passed
+✅ google_search passed
+✅ python_coder passed
+✅ wikipedia_search passed
+...
+✅ All tests passed
+```
+
+### 🧠 Test LLM Engines
+Verify that your LLM engines (OpenAI, DashScope, Gemini, etc.) are correctly initialized and responding:
+```bash
+python agentflow/scripts/test_llm_engine.py
+```
+Example output:
+```text
+🚀 Starting fault-tolerant test for 11 engines...
+✅ Passed: 4
+   • gpt-4o → ChatOpenAI
+   • dashscope-qwen2.5-3b-instruct → ChatDashScope
+   • gemini-1.5-flash → ChatGemini
+   • deepseek-chat → ChatDeepseek
+...
+🎉 All engines initialized successfully!
+```
+
 ## ⚡ Quick Start on AgentFlow Inference 
 AgentFlow provides a modular agentic system with **four specialized modules** (planner, executor, verifier, generator) that coordinate through **evolving memory** and a **toolkit** over **multiple turns** to solve complex reasoning tasks. 
 
 To quickly experience the system in action, run the command below (don’t forget to set up your API key):
-```python 
+```bash 
 python quick_start.py
 ```
-Here is the content of `quick_start.py`:
-```python
-# Import the solver
-from agentflow.agentflow.solver import construct_solver
+Example output of `python quick_start.py`:
+```text
+==> Initializing agentflow...
+==> Setting up tools...
+==> 🎯 Reasoning Steps from AgentFlow (Deep Thinking...)
+==> 🔍 Step 0: Query Analysis
+==> 🎯 Step 1: Action Prediction (Google_Search_Tool)
+==> 🛠️ Step 1: Command Execution (Google_Search_Tool)
+...
+**Answer:** The capital of France is Paris.
+==> ✅ Query Solved!
 
-# Set the LLM engine name
-llm_engine_name = "dashscope"
+**Process Summary:**
+1. **Query Analysis:** Identified as a factual question about the capital of France.
+2. **Tool Selection:** Used Google Search for accurate information.
+3. **Execution:** Confirmed Paris as the capital.
+4. **Verification:** Cross-referenced sources for reliability.
 
-# Construct the solver
-solver = construct_solver(llm_engine_name=llm_engine_name)
-
-# Solve the user query
-output = solver.solve("What is the capital of France?")
-print(output["direct_output"])
+**Answer:** The capital of France is Paris.
 ```
 
 ## 💥 Quick Start on AgentFlow Flow-GRPO Training 
@@ -214,11 +233,17 @@ Serve the trained planner model with VLLM (here we deploy our [7B Flow-GRPO plan
 bash scripts/serve_vllm.sh
 ```
 
-Run inference on benchmark tasks:
+Run inference on specific benchmark tasks:
 ```bash
 cd test
-bash exp/run_all_models_all_datasets.sh
+# Run Bamboogle benchmark
+bash bamboogle/run.sh
 ```
+
+After running, each task folder (e.g., `test/bamboogle/`) will contain:
+- `data/`: Contains the evaluation dataset (e.g., `data.json`).
+- `logs/`: Contains detailed execution logs for each problem index (organized by model label).
+- `results/`: Contains the model's generated answers (`output_i.json`) and final evaluation scores (`finalscore_*.log`).
 
 You can find more benchmarking details in [benchmark.md](assets/doc/benchmark.md). 
 
@@ -227,7 +252,7 @@ You can find more benchmarking details in [benchmark.md](assets/doc/benchmark.md
 AgentFlow supports different LLM engines for each agent module. See [llm_engine.md](assets/doc/llm_engine.md) for supported models and [`factory.py`](agentflow/agentflow/engine/factory.py) for the corresponding `model_string` configuration:
 
 **Planner Agent:**
-- Modify the `llm_engine_name` parameter in [`test/exp/run_all_models_all_datasets.sh`](test/exp/run_all_models_all_datasets.sh)
+- Modify the `llm_engine_name` parameter in the corresponding `run.sh` script (e.g., `test/bamboogle/run.sh`)
 
 **Other Agents (Executor, Verifier, Generator):**
 - By default, these agents use a fixed LLM engine (Qwen-2.5-7B-Instruct via DashScope)
@@ -251,7 +276,30 @@ executor = Executor(
 ```
 - For detailed information on supported engines and `model_string` formats, see [`llm_engine.md`](assets/doc/llm_engine.md)
 
+## 🏆 Experiments
 
+### 📊 Main Results
+**AgentFlow (Qwen-2.5-7B-Instruct Backbone)** outperforms top baselines on 10 benchmarks:  
+- **+14.9%** on search  
+- **+14.0%** on agentic reasoning  
+- **+14.5%** on math  
+- **+4.1%** on science  
+
+💡 Even surpasses larger proprietary models like **GPT-4o (~200B)**.
+
+![main_table1](assets/img/maintable1.png)
+![main_table2](assets/img/maintable2.png)
+
+### 🔍 In-Depth Analysis
+- Improved planning and decision-making  
+- Enhanced tool-calling reliability  
+- Positive scaling trends with model size & reasoning turns  
+
+Explore more in our [paper](https://arxiv.org/abs/2510.05592) or [project page](https://agentflow.stanford.edu/).
+
+![tool_call](assets/img/tool_call.png)
+
+---
 
 ## 🤝 Core Contributors
 

@@ -21,52 +21,30 @@ You can configure the following parameters in [`scripts/serve_vllm.sh`](../../sc
 | TP | Tensor-parallel-size | `1`                                |
 
 
-### Running Benchmark Experiments
-We provide an one-click script to run all benchmarks at once. It executes our agentic system on these benchmarks, saves the outputs, and automatically invokes the LLM for evaluation:
+We provide task-specific scripts to run benchmarks. These scripts execute our agentic system, save the outputs, and automatically invoke the LLM for evaluation.
+
+To run a specific benchmark (e.g., Bamboogle):
 ```bash
 cd test
-bash exp/run_all_models_all_datasets.sh
+bash bamboogle/run.sh
 ```
 
-**Configuration**
+You can configure benchmark settings in each task's `run.sh` script (e.g., `test/bamboogle/run.sh`).
 
-You can configure benchmark settings in [`test/exp/run_all_models_all_datasets.sh`](../../test/exp/run_all_models_all_datasets.sh).
-
-Partial Content of [`test/exp/run_all_models_all_datasets.sh`](../../test/exp/run_all_models_all_datasets.sh):
+Example configuration in `test/bamboogle/run.sh`:
 ```bash
 #!/bin/bash
-# Usage: bash exp/run_all_models_all_datasets.sh
-# Model format: "port:modelname,label,enabled_tools,tool_engines"
-# Example: "8000:vllm-IPF/model1,label1,Tool1|Tool2,engine1|engine2"
 
-############ Configuration ############
-# Get the directory where this script is located
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-# Set project directory to test/ folder (parent of exp/)
-PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
+# Configuration
+TASK="bamboogle"
 THREADS=20
+DATA_FILE_NAME="data.json"
 
-# Define all tasks to run
-TASKS=(
-    # "gameof24"
-    "aime24"
-    # "amc23"
-    # "bamboogle"
-    # "2wiki"
-    # "gaia"
-    # "musique"
-    # "hotpotqa"
-    # "medqa"
-    # "gpqa"
-)
-
-# Define models with their tool configurations in format:
-# "port:modelname,label,enabled_tools,tool_engines"
-# - enabled_tools: use | as separator (will be converted to comma)
-# - tool_engines: use | as separator (will be converted to comma)
-# Example: "8000:vllm-IPF/model,label,Tool1|Tool2|Tool3,engine1|engine2|Default"
 MODELS=(
-    "8000:vllm-AgentFlow/agentflow-planner-7b,AgentFlow-7B,Base_Generator_Tool|Python_Coder_Tool|Google_Search_Tool|Wikipedia_Search_Tool,dashscope-qwen2.5-7b-instruct|dashscope-qwen2.5-7b-instruct|Default|Default"
+    "8000:vllm-AgentFlow/agentflow-planner-7b,AgentFlow-7B,\
+Base_Generator_Tool|Python_Coder_Tool|Google_Search_Tool|Wikipedia_Search_Tool,\
+gpt-4o-mini|gpt-4o-mini|Default|Default,\
+trainable|gpt-4o|gpt-4o|gpt-4o"
 )
 ```
 
@@ -99,14 +77,15 @@ MODELS=(
 )
 ```
 
-**Format:** `"port:model_path,label,Tool1|Tool2|Tool3,engine1|engine2|Default"`
-- **port**: VLLM serving port
-- **planner_model_path**: HuggingFace model path or local path (please add `vllm-` prefix if you serve planner model through vllm. If you want to use other model, please refer to [llm_engine.md](llm_engine.md))
-- **label**: Display name for results
-- **tools**: Pipe-separated tool list with engine (e.g., `Tool1|Tool2`)
-- **tool_engine**: Pipe-separated tool engine for tools (If you want to use other tool_engine, please refer to [llm_engine.md](llm_engine.md))
+**Format:** `"port:model_path,label,Tool1|Tool2,engine1|engine2,planner|fixed|verifier|executor"`
+- **port**: VLLM serving port (leave empty for API-based models)
+- **model_path**: Model engine name (e.g., `gpt-4o` or `vllm-AgentFlow/agentflow-planner-7b`)
+- **label**: Display name for results (used for folder naming)
+- **tools**: Pipe-separated tool list (e.g., `Tool1|Tool2`)
+- **tool_engine**: Pipe-separated engines for each tool
+- **model_engines**: Configuration for the four agent modules (e.g., `trainable|gpt-4o|gpt-4o|gpt-4o`)
 
-**Note**: For all agents except the `planner`, we use [a fixed LLM engine (Qwen-2.5-7B-Instruct)](https://github.com/lupantech/AgentFlow/blob/d557fbf49f2c88aafb3d06c9b155cf3266218629/agentflow/agentflow/models/planner.py#L19).
+**Note**: For all agents except the `planner`, we now use [gpt-4o](https://github.com/lupantech/AgentFlow/blob/main/agentflow/agentflow/models/planner.py#L11) by default to ensure high-quality reasoning.
 
 
 

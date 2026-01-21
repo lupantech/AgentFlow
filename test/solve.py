@@ -333,7 +333,7 @@ def parse_arguments():
     )
     parser.add_argument("--enabled_tools", default="Generalist_Solution_Generator_Tool", help="List of enabled tools.")
     parser.add_argument("--tool_engine", default="Default", help="List of tool engines corresponding to enabled_tools, separated by commas.")
-    parser.add_argument("--model_engine", default="trainable,dashscope,dashscope,dashscope", help="Model engine configuration for [planner_main, planner_fixed, verifier, executor], separated by commas. Use 'trainable' for components that should use llm_engine_name.")
+    parser.add_argument("--model_engine", default="trainable,gpt-4o,gpt-4o,gpt-4o", help="Model engine configuration for [planner_main, planner_fixed, verifier, executor], separated by commas. Use 'trainable' for components that should use llm_engine_name.")
     parser.add_argument("--index", type=int, default=0, help="Index of the problem in the benchmark file.")
     parser.add_argument("--root_cache_dir", default="solver_cache", help="Path to solver cache directory.")
     parser.add_argument("--output_json_dir", default="results", help="Path to output JSON directory.")
@@ -351,7 +351,7 @@ def main(args):
     # Initialize Tools
     enabled_tools = args.enabled_tools.split(",") if args.enabled_tools else []
     tool_engine = args.tool_engine.split(",") if args.tool_engine else ["Default"]
-    model_engine = args.model_engine.split(",") if args.model_engine else ["trainable", "dashscope", "dashscope", "dashscope"]
+    model_engine = args.model_engine.split(",") if args.model_engine else ["trainable", "gpt-4o", "gpt-4o", "gpt-4o"]
     print(args.base_url, args.llm_engine_name)
 
     if len(tool_engine) < len(enabled_tools):
@@ -360,7 +360,7 @@ def main(args):
     # Ensure model_engine has exactly 4 elements
     if len(model_engine) != 4:
         print(f"Warning: model_engine should have 4 elements [planner_main, planner_fixed, verifier, executor], got {len(model_engine)}. Using defaults.")
-        model_engine = ["trainable", "dashscope", "dashscope", "dashscope"]
+        model_engine = ["trainable", "gpt-4o", "gpt-4o", "gpt-4o"]
 
     # Parse model_engine configuration
     # Format: [planner_main, planner_fixed, verifier, executor]
