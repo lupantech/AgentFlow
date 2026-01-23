@@ -2,7 +2,7 @@ import importlib
 import json
 import os
 import re
-import signal
+import threading
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
@@ -48,8 +48,6 @@ except NameError:
     class TimeoutError(Exception):
         pass
 
-def timeout_handler(signum, frame):
-    raise TimeoutError("Function execution timed out")
 
 class Executor:
     def __init__(self, llm_engine_name: str, root_cache_dir: str = "solver_cache",  num_threads: int = 1, max_time: int = 120,
@@ -210,20 +208,53 @@ execution = tool.execute(query=["Methanol", "function of hyperbola", "Fermat's L
             return [block.strip() for block in blocks if block.strip()]
 
         def execute_with_timeout(block: str, local_context: dict) -> Optional[str]:
-            # Set up the timeout handler
-            signal.signal(signal.SIGALRM, timeout_handler)
-            signal.alarm(self.max_time)
-
-            try:
-                # Execute the block in the local context
-                exec(block, globals(), local_context)
-                result = local_context.get('execution')
-                signal.alarm(0)  # Disable the alarm
-                return result
-            except TimeoutError:
+            """
+            Execute a code block with timeout protection using threading.
+            This works in any thread, unlike signal.alarm() which only works in the main thread.
+            
+            Uses a cancellation event to allow cooperative cancellation and reduce memory leaks.
+            """
+            import threading
+            
+            result_container = {'result': None, 'exception': None, 'completed': False}
+            cancel_event = threading.Event()
+            
+            def target():
+                try:
+                    # Inject cancel_event into the execution context for cooperative cancellation
+                    local_context['_cancel_event'] = cancel_event
+                    exec(block, globals(), local_context)
+                    result_container['result'] = local_context.get('execution')
+                    result_container['completed'] = True
+                except Exception as e:
+                    result_container['exception'] = e
+                    result_container['completed'] = True
+            
+            # Start execution in a daemon thread
+            exec_thread = threading.Thread(target=target, name=f"ToolExec-{id(block)}")
+            exec_thread.daemon = True
+            exec_thread.start()
+            
+            # Wait for completion or timeout
+            exec_thread.join(timeout=self.max_time)
+            
+            if not result_container['completed']:
+                # Timeout occurred - signal cancellation
+                cancel_event.set()
+                
+                # Give it a brief moment to notice the cancellation
+                exec_thread.join(timeout=0.5)
+                
+                # Clean up references to help GC
+                result_container.clear()
+                local_context.pop('_cancel_event', None)
+                
                 return f"Execution timed out after {self.max_time} seconds"
-            finally:
-                signal.alarm(0)  # Ensure alarm is disabled even if other exceptions occur
+            elif result_container['exception']:
+                raise result_container['exception']
+            else:
+                return result_container['result']
+
 
         # Try to get tool from cache first
         tool = None
