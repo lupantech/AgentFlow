@@ -32,6 +32,7 @@ AgentFlow: In-the-Flow Agentic System Optimization
 
 
 ## 📣 News
+- **[2026.01.26]** 🚀 Our paper has been accepted by [**ICLR 2026**](https://iclr.cc/Conferences/2026)! See you in Rio de Janeiro!
 - **[2025.10.26]** 📚 Our project introduction has been featured on **[DeepWiki](https://deepwiki.com/lupantech/AgentFlow)**!
 - **[2025.10.16]** 🏆 Our paper has been accepted by [**NeurIPS 2025 Efficient Reasoning Workshop**](https://efficient-reasoning.github.io/)!
 - **[2025.10.13]** 📸 Excited to have a tutorial video for AgentFlow covered by Discover AI on **[YouTube](https://www.youtube.com/watch?v=kIQbCQIH1SI)**!
@@ -375,11 +376,11 @@ We are also looking forward to your feedback and suggestions!
 
 ## 📚 Citation
 ```bibtex
-@article{li2025flow,
-  title={In-the-Flow Agentic System Optimization for Effective Planning and Tool Use},
-  author={Li, Zhuofeng and Zhang, Haoxiang and Han, Seungju and Liu, Sheng and Xie, Jianwen and Zhang, Yu and Choi, Yejin and Zou, James and Lu, Pan},
-  journal={arXiv preprint arXiv:2510.05592},
-  year={2025}
+@inproceedings{li2026intheflow,
+    title = {In-the-Flow Agentic System Optimization for Effective Planning and Tool Use},
+    author = {Li, Zhuofeng and Zhang, Haoxiang and Han, Seungju and Liu, Sheng and Xie, Jianwen and Zhang, Yu and Choi, Yejin and Zou, James and Lu, Pan},
+    booktitle = {International Conference on Learning Representations (ICLR)},
+    year = {2026}
 }
 ```
 
