@@ -376,7 +376,7 @@ We are also looking forward to your feedback and suggestions!
 
 ## 📚 Citation
 ```bibtex
-@inproceedings{li2026intheflow,
+@inproceedings{li2026flow,
     title = {In-the-Flow Agentic System Optimization for Effective Planning and Tool Use},
     author = {Li, Zhuofeng and Zhang, Haoxiang and Han, Seungju and Liu, Sheng and Xie, Jianwen and Zhang, Yu and Choi, Yejin and Zou, James and Lu, Pan},
     booktitle = {International Conference on Learning Representations (ICLR)},
