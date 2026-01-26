@@ -10,51 +10,32 @@ import threading
 from agentflow.tools.base import BaseTool
 from agentflow.engine.factory import create_llm_engine
 
-import signal
 from contextlib import contextmanager
-
-import platform
 
 # Tool name mapping - this defines the external name for this tool
 TOOL_NAME = "Python_Code_Generator_Tool"
-
-def is_windows_os():
-    system=platform.system()
-    return system == 'Windows'
 
 # Custom exception for code execution timeout
 class TimeoutException(Exception):
     pass
 
+
 # Custom context manager for code execution timeout
 @contextmanager
 def timeout(seconds):
+    """
+    Context manager for timeout using threading.Timer.
+    This works in any thread, unlike signal.alarm() which only works in the main thread.
+    """
+    def raise_timeout():
+        raise TimeoutException("Code execution timed out")
     
-    if is_windows_os():
-        # Windows timeout using threading.Timer
-        def raise_timeout():
-            raise TimeoutException("Code execution timed out")
-        timer = threading.Timer(seconds, raise_timeout)
-        timer.start()
-        try:
-            yield
-        finally:
-            timer.cancel()
-            
-    else:
-        def timeout_handler(signum, frame):
-            raise TimeoutException("Code execution timed out")
-
-        # Set the timeout handler
-        original_handler = signal.signal(signal.SIGALRM, timeout_handler)
-        signal.alarm(seconds)
-        
-        try:
-            yield
-        finally:
-            # Restore the original handler and disable the alarm
-            signal.alarm(0)
-            signal.signal(signal.SIGALRM, original_handler)
+    timer = threading.Timer(seconds, raise_timeout)
+    timer.start()
+    try:
+        yield
+    finally:
+        timer.cancel()
 
 
 LIMITATION = f"""
