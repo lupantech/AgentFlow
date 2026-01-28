@@ -225,9 +225,9 @@ class Initializer:
                             if engine == "Default":
                                 tool_instance = obj()
                             elif engine == "self":
-                                tool_instance = obj(model_string=self.model_string)
+                                tool_instance = obj(model_string=self.model_string, base_url=self.base_url)
                             else:
-                                tool_instance = obj(model_string=engine)
+                                tool_instance = obj(model_string=engine, base_url=self.base_url)
                         else:
                             tool_instance = obj()
 

@@ -207,6 +207,7 @@ def construct_solver(llm_engine_name : str = "gpt-4o",
                      verbose : bool = True,
                      vllm_config_path : str = None,
                      base_url : str = None,
+                     base_url_fixed : str = None,
                      temperature: float = 0.0
                      ):
 
@@ -235,6 +236,7 @@ def construct_solver(llm_engine_name : str = "gpt-4o",
         available_tools=initializer.available_tools,
         verbose=verbose,
         base_url=base_url,
+        base_url_fixed=base_url_fixed,
         temperature=temperature
     )
 
@@ -246,6 +248,7 @@ def construct_solver(llm_engine_name : str = "gpt-4o",
         available_tools=initializer.available_tools,
         verbose=verbose,
         base_url=base_url if verifier_engine == llm_engine_name else None,
+        base_url_fixed=base_url_fixed,
         temperature=temperature
     )
 
