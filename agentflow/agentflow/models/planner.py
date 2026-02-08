@@ -13,18 +13,18 @@ from agentflow.models.memory import Memory
 class Planner:
     def __init__(self, llm_engine_name: str, llm_engine_fixed_name: str = "gpt-4o",
                  toolbox_metadata: dict = None, available_tools: List = None,
-                 verbose: bool = False, base_url: str = None, is_multimodal: bool = False,
+                 verbose: bool = False, base_url: str = None, base_url_fixed: str = None, is_multimodal: bool = False,
                  check_model: bool = True, temperature : float = .0):
         self.llm_engine_name = llm_engine_name
         self.llm_engine_fixed_name = llm_engine_fixed_name
         self.is_multimodal = is_multimodal
         # self.llm_engine_mm = create_llm_engine(model_string=llm_engine_name, is_multimodal=False, base_url=base_url, temperature = temperature)
-        self.llm_engine_fixed = create_llm_engine(model_string=llm_engine_fixed_name, is_multimodal=False, temperature = temperature)
-        self.llm_engine = create_llm_engine(model_string=llm_engine_name, is_multimodal=False, base_url=base_url, temperature = temperature)
+        self.llm_engine_fixed = create_llm_engine(model_string=llm_engine_fixed_name, base_url=base_url_fixed, is_multimodal=False, temperature=temperature)
+        self.llm_engine = create_llm_engine(model_string=llm_engine_name, base_url=base_url, is_multimodal=False, temperature=temperature)
         self.toolbox_metadata = toolbox_metadata if toolbox_metadata is not None else {}
         self.available_tools = available_tools if available_tools is not None else []
-
         self.verbose = verbose
+        
     def get_image_info(self, image_path: str) -> Dict[str, Any]:
         image_info = {}
         if image_path and os.path.isfile(image_path):
