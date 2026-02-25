@@ -83,7 +83,7 @@ def find_most_similar_candidate(query: str, candidates: list) -> str:
             for opt in candidates:
                 if val in opt:
                     return opt
-    except:
+    except Exception:
         pass
     return candidates[0] if candidates else query  # worst case fallback
 
