@@ -15,7 +15,7 @@ def get_public_ip_with_fallback():
             if response.status_code == 200 and valid_ip(ip):
                 print(f"✅ Successfully got public IP: {ip} from {service}.")
                 return ip
-        except:
+        except Exception:
             continue
     return "Failed to fetch public IP QAQ. "
 

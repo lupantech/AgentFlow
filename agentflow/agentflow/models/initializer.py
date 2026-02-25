@@ -42,7 +42,7 @@ def _get_optimal_workers(max_workers: int = None) -> tuple[int, str]:
         try:
             external_parallelism = int(slurm_ntasks)
             detection_method = "SLURM"
-        except:
+        except Exception:
             pass
 
     # Calculate optimal workers
