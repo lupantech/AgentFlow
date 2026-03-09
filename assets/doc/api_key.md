@@ -73,6 +73,16 @@ This guide provides detailed instructions on how to obtain API keys for all LLM 
 
 > **Important Note for Qwen Models**: Together AI offers both Turbo (quantized) and standard (non-quantized) versions of Qwen models. For best performance and accuracy, we recommend using the **non-quantized versions** (e.g., `Qwen/Qwen2.5-7B-Instruct` instead of `Qwen/Qwen2.5-7B-Instruct-Turbo`). The Turbo versions are faster but may have reduced quality due to quantization.
 
+---
+
+## 5. Forge API Key
+
+**Purpose**: Access Forge's OpenAI-compatible router with model strings like `OpenAI/gpt-4o-mini`.
+
+**Environment variables**:
+- `FORGE_API_KEY`
+- `FORGE_API_BASE` (optional, defaults to `https://api.forge.tensorblock.co/v1`)
+
 
 ## Important Notes
 
@@ -94,3 +104,4 @@ This guide provides detailed instructions on how to obtain API keys for all LLM 
 | GOOGLE_API_KEY | Gemini models | [aistudio.google.com](https://aistudio.google.com/) | [Docs](https://ai.google.dev/gemini-api/docs/models/gemini) |
 | DASHSCOPE_API_KEY | Qwen models | [dashscope.console.aliyun.com](https://dashscope.console.aliyun.com/) | [Docs](https://help.aliyun.com/zh/dashscope/developer-reference/model-square) |
 | TOGETHER_API_KEY | Qwen & open-source models | [together.ai](https://www.together.ai/) | [Docs](https://docs.together.ai/docs/inference-models) |
+| FORGE_API_KEY | Forge router | [forge.tensorblock.co](https://forge.tensorblock.co) | [Docs](https://forge.tensorblock.co) |

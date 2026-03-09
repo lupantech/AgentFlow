@@ -19,6 +19,29 @@ def create_llm_engine(model_string: str, use_cache: bool = False, is_multimodal:
 
     print(f"creating llm engine {model_string} with: is_multimodal: {is_multimodal}, kwargs: {kwargs}")
 
+    model_string_lower = model_string.lower()
+
+    # === Forge (OpenAI-compatible router) ===
+    if model_string_lower.startswith("forge-"):
+        from .openai import ChatOpenAI
+
+        if "FORGE_API_KEY" not in os.environ:
+            raise ValueError("Please set the FORGE_API_KEY environment variable.")
+
+        model_string = model_string[len("forge-"):]
+        config = {
+            "model_string": model_string,
+            "use_cache": use_cache,
+            "is_multimodal": is_multimodal,
+            "temperature": kwargs.get("temperature", 0.7),
+            "top_p": kwargs.get("top_p", 0.9),
+            "frequency_penalty": kwargs.get("frequency_penalty", 0.5),
+            "presence_penalty": kwargs.get("presence_penalty", 0.5),
+            "api_key": os.getenv("FORGE_API_KEY"),
+            "base_url": os.getenv("FORGE_API_BASE") or "https://api.forge.tensorblock.co/v1",
+        }
+        return ChatOpenAI(**config)
+
     # === Azure OpenAI ===
     if "azure" in model_string:
         from .azure import ChatAzureOpenAI
