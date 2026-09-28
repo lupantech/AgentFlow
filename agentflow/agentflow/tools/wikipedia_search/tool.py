@@ -5,7 +5,11 @@ from pydantic import BaseModel
 
 from agentflow.tools.base import BaseTool
 from agentflow.engine.factory import create_llm_engine
-from agentflow.tools.web_search.tool import Web_Search_Tool
+from agentflow.tools.web_search.tool import Web_Search_Tool, WIKIMEDIA_USER_AGENT
+
+# The wikipedia package's default User-Agent is shared by many scripts and gets
+# blocked; identify this project as Wikimedia's User-Agent policy asks.
+wikipedia.set_user_agent(WIKIMEDIA_USER_AGENT)
 
 # from web_rag import Web_Search_Tool
 # from agentflow.tools.web_search.tool import Web_Search_Tool # NOTE: Shall be used in the future
