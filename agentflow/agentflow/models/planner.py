@@ -132,13 +132,18 @@ Be biref and precise with insight.
         def normalize_tool_name(tool_name: str) -> str:
             """
             Normalizes a tool name robustly using regular expressions.
-            It handles any combination of spaces and underscores as separators.
+            It handles any combination of spaces and underscores as separators,
+            and Markdown the planner may wrap the name in (`code`, *emphasis*,
+            quotes, a leading list bullet, trailing punctuation).
             """
             def to_canonical(name: str) -> str:
+                # Drop Markdown decoration, e.g. "`Tool_Name`" or "- *Tool_Name*."
+                name = re.sub(r"[`*\"']", " ", name)
+                name = re.sub(r"^\s*[-\u2022]\s+", "", name).strip(" .,:;")
                 # Split the name by any sequence of one or more spaces or underscores
                 parts = re.split('[ _]+', name)
                 # Join the parts with a single underscore and convert to lowercase
-                return "_".join(part.lower() for part in parts)
+                return "_".join(part.lower() for part in parts if part)
 
             normalized_input = to_canonical(tool_name)
             
