@@ -140,7 +140,8 @@ class Wikipedia_Search_Tool(BaseTool):
             user_metadata = {
                 "limitation": LIMITATION,
                 "best_practice": BEST_PRACTICE
-            }
+            },
+            model_string=model_string,
         )
         self.llm_engine = create_llm_engine(model_string=model_string, temperature=0.0, top_p=1.0, frequency_penalty=0.0, presence_penalty=0.0)
 
