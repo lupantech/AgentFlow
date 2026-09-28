@@ -1,4 +1,6 @@
 import os
+from urllib.parse import urlparse
+
 import numpy as np
 import openai
 import requests
@@ -9,6 +11,13 @@ from agentflow.tools.base import BaseTool
 from agentflow.engine.factory import create_llm_engine
 
 load_dotenv()
+
+# Wikimedia asks scripts for an informative User-Agent with contact information and
+# blocks generic or browser-imitating ones (https://meta.wikimedia.org/wiki/User-Agent_policy).
+WIKIMEDIA_USER_AGENT = os.getenv(
+    "WIKIMEDIA_USER_AGENT",
+    "AgentFlow/1.0 (https://github.com/lupantech/AgentFlow)",
+)
 
 # Tool name mapping - this defines the external name for this tool
 TOOL_NAME = "Web_RAG_Search_Tool"
@@ -144,6 +153,9 @@ class Web_Search_Tool(BaseTool):
             'Connection': 'keep-alive',
             'Upgrade-Insecure-Requests': '1',
         }
+        host = urlparse(url).hostname or ""
+        if host.endswith(("wikipedia.org", "wikimedia.org")):
+            headers['User-Agent'] = WIKIMEDIA_USER_AGENT
 
         try:
             response = requests.get(url, headers=headers, timeout=10)
