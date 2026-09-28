@@ -87,12 +87,39 @@ def find_most_similar_candidate(query: str, candidates: list) -> str:
         pass
     return candidates[0] if candidates else query  # worst case fallback
 
+# ================== Open-ended QA judge prompt ==================
+# The single-stage prompt below (used by default) is worded for
+# multiple-choice questions and asks for a matching choice letter. On free-form
+# answers (Bamboogle, 2Wiki, HotpotQA, Musique, GAIA) gpt-4o can therefore mark a
+# correct answer wrong because it is "not a letter". `--judge_prompt open_qa`
+# selects this prompt instead.
+
+OPEN_QA_VERIFICATION_PROMPT = """
+You are grading a question-answering system. Decide whether the Model Response gives the same answer as the Correct Answer.
+
+Question: {question}
+Model response: {response}
+Correct answer: {correct_answer}
+
+Rules:
+1. Judge only the final answer in the Model Response; ignore reasoning, formatting and explanations.
+2. The prediction is correct if it names the same entity, number, date or fact as the Correct Answer, allowing for differences in wording, spelling, capitalization, abbreviation and units.
+3. A more detailed answer that contains the Correct Answer is correct (e.g. "Titan IIIE/Centaur" for "Titan IIIE"). A vaguer, partial or different answer is not.
+4. If the Correct Answer lists several acceptable answers, matching any one of them is enough.
+5. The prediction is incorrect if it gives several conflicting candidates, hedges, or says it cannot answer.
+
+Response Format:
+<analysis>: The final answer extracted from the Model Response, and a brief comparison
+<true_false>: "True" if the prediction is correct, otherwise "False"
+"""
+
 # ================== Scorer Class ==================
 
 class ResultScorer:
-    def __init__(self, llm_engine=None):
+    def __init__(self, llm_engine=None, judge_prompt="default"):
         self.llm_engine = llm_engine or ChatOpenAI(model_string="gpt-4o", is_multimodal=False, enable_cache=True)
-        print(f"\nLocal OpenAI engine {self.llm_engine.model_string} initialized.\n")
+        self.judge_prompt = judge_prompt
+        print(f"\nLocal OpenAI engine {self.llm_engine.model_string} initialized (judge prompt: {judge_prompt}).\n")
 
     def answer_verification_twostage(self, question, response, correct_answer, choices):
         """Two-stage verification: extract then verify (for GPQA and MedQA)"""
@@ -179,6 +206,10 @@ Response Format:
 <analysis>: First extract the mathematical answers, then explain the comparison
 <true_false>: Return "True" only for exact matches, otherwise "False"
         """
+
+        if self.judge_prompt == "open_qa":
+            query_prompt = OPEN_QA_VERIFICATION_PROMPT.format(
+                question=question, response=response, correct_answer=correct_answer)
 
         verification = self.llm_engine(query_prompt, response_format=AnswerVerification)
 
@@ -317,6 +348,8 @@ def parse_args():
                         help="The type of response to extract from the results")
     parser.add_argument("--max_workers", type=int, default=16,
                         help="The maximum number of workers to use")
+    parser.add_argument("--judge_prompt", type=str, default="default", choices=["default", "open_qa"],
+                        help="Single-stage judge prompt: 'default' (multiple-choice wording) or 'open_qa'")
     return parser.parse_args()
 
 
@@ -355,7 +388,7 @@ def main():
         print(f"# {arg}: {value}")
     print("#"*50)
 
-    scorer = ResultScorer()
+    scorer = ResultScorer(judge_prompt=args.judge_prompt)
     analyzer = ResultAnalyzer()
 
     # Load the results (with choices for GPQA/MedQA)
@@ -386,7 +419,8 @@ def main():
         "total": len(results),
         "accuracy": acc,
         "wrong_pids": wrong_pids,
-        "wrong_indices": wrong_indices
+        "wrong_indices": wrong_indices,
+        "judge_prompt": args.judge_prompt,
     }
 
     # Calculate additional statistics if log directory is provided
