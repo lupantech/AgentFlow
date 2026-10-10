@@ -148,7 +148,6 @@ class Solver:
 
                 # Update memory
                 self.memory.add_action(step_count, tool_name, sub_goal, command, result)
-                memory_actions = self.memory.get_actions()
 
                 # [5] Verify memory (context verification)
                 local_start_time = time.time()
@@ -173,7 +172,7 @@ class Solver:
 
             # Add memory and statistics to json_data
             json_data.update({
-                "memory": memory_actions,
+                "memory": self.memory.get_actions(),
                 "step_count": step_count,
                 "execution_time": round(time.time() - query_start_time, 2),
             })
