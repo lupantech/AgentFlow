@@ -168,11 +168,15 @@ IMPORTANT: The response must end with either "Conclusion: STOP" or "Conclusion: 
                 if conclusion in ['STOP', 'CONTINUE']:
                     return analysis, conclusion
 
-            # If no valid conclusion found, search for STOP or CONTINUE anywhere in the text
-            if 'stop' in response.lower():
-                return analysis, 'STOP'
-            elif 'continue' in response.lower():
-                return analysis, 'CONTINUE'
-            else:
-                print("No valid conclusion (STOP or CONTINUE) found in the response. Continuing...")
-                return analysis, 'CONTINUE'
+            # Accept a bare verdict, but never infer STOP from explanatory
+            # prose such as "do not stop" or "stopping would be premature".
+            bare_verdict = re.fullmatch(
+                r'\s*(?:\*\*|`)?(STOP|CONTINUE)(?:\*\*|`)?[.!]?\s*',
+                response,
+                re.IGNORECASE,
+            )
+            if bare_verdict:
+                return analysis, bare_verdict.group(1).upper()
+
+            print("No valid conclusion (STOP or CONTINUE) found in the response. Continuing...")
+            return analysis, 'CONTINUE'
