@@ -104,7 +104,7 @@ sudo apt-get install parallel
 ### Setup Environment Variables
 Copy the `.env.template` file from `agentflow/.env.template` and rename it to `.env`, then place it in the `agentflow/` folder. Update the following variables with your own API keys:
 - `OPENAI_API_KEY` (for judging reasponse)
-- `GOOGLE_API_KEY` (for Google Search tool)
+- `GOOGLE_API_KEY` (optional, for Google Search; unconfigured inference uses Parallel Search MCP)
 - `DASHSCOPE_API_KEY` ([optional] for calling Qwen-2.5-7B-Instruct as engine for agents and tools)
 - `TOGETHER_API_KEY` ([optional] alternative for calling Qwen-2.5-7B-Instruct as engine for agents and tools - recommended for international users)
 - More ways: serve Qwen2.5-7B-instruct model with vLLM (details refer to [`serve_vllm_local.md`](assets/doc/serve_vllm_local.md)).
@@ -115,6 +115,38 @@ Please check [API Key Setup Guide](assets/doc/api_key.md) for detailed instructi
 cp agentflow/.env.template agentflow/.env
 # Then edit agentflow/.env with your API keys
 ```
+
+### Web search without a search API key
+
+`construct_solver()` uses [Parallel Search MCP](https://docs.parallel.ai/integrations/mcp/search-mcp)
+for web search when `GOOGLE_API_KEY` is unset. It provides free anonymous search
+in Fast mode and page fetching, with no Parallel account or API key. A configured
+`GOOGLE_API_KEY` keeps Google Search as the default. Model credentials are still
+needed for AgentFlow's planner, executor and answer generation.
+
+Choose tools explicitly to control search access:
+
+```python
+solver = construct_solver(
+    llm_engine_name="gpt-4o",
+    enabled_tools=["Base_Generator_Tool", "Parallel_Search_Tool"],
+)
+```
+
+Existing explicit tool lists and tool-engine overrides keep their meaning. An
+empty `enabled_tools=[]` disables tools; `["all"]` includes every registered
+tool, including Parallel. Explicit Google selection never falls back to Parallel
+on a missing key or failed request. The existing Google and Wikipedia tools remain
+available for their grounded answers and Wikipedia-specific behavior.
+
+The planner can call `Parallel_Search_Tool` with `query="..."` to search, or with
+`query="...", urls=["https://..."]` to fetch up to 20 pages. Optional
+`search_queries=["focused keywords"]` narrows the excerpts. Fetch queries are
+limited to 200 characters. Results contain source URLs and excerpts rather than
+a generated answer. Anonymous service quotas apply; errors are returned to the
+agent without switching providers. Each `solve()` starts a fresh search session,
+shared by related search/fetch calls. Calls outside `solve()` are standalone runs.
+Requests have a 30-second deadline and honor the executor's cancellation signal.
 
 ## 🔍 Check Before You Run (Recommended)
 Before running inference or training, we recommend verifying that your API keys and environment are properly configured.

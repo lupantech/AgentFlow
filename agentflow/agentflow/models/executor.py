@@ -3,11 +3,13 @@ import json
 import os
 import re
 import threading
+from contextvars import copy_context
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
 from agentflow.engine.factory import create_llm_engine
 from agentflow.models.formatters import ToolCommand
+from agentflow.tools.parallel_search.context import cancel_event as search_cancel_event
 
 # Tool name mapping: Static fallback mapping (long external names to internal)
 TOOL_NAME_MAPPING_LONG = {
@@ -220,6 +222,7 @@ execution = tool.execute(query=["Methanol", "function of hyperbola", "Fermat's L
             cancel_event = threading.Event()
             
             def target():
+                cancel_token = search_cancel_event.set(cancel_event)
                 try:
                     # Inject cancel_event into the execution context for cooperative cancellation
                     local_context['_cancel_event'] = cancel_event
@@ -229,9 +232,14 @@ execution = tool.execute(query=["Methanol", "function of hyperbola", "Fermat's L
                 except Exception as e:
                     result_container['exception'] = e
                     result_container['completed'] = True
+                finally:
+                    search_cancel_event.reset(cancel_token)
             
             # Start execution in a daemon thread
-            exec_thread = threading.Thread(target=target, name=f"ToolExec-{id(block)}")
+            context = copy_context()
+            exec_thread = threading.Thread(
+                target=context.run, args=(target,), name=f"ToolExec-{id(block)}"
+            )
             exec_thread.daemon = True
             exec_thread.start()
             
@@ -264,6 +272,8 @@ execution = tool.execute(query=["Methanol", "function of hyperbola", "Fermat's L
             tool = self.tool_instances_cache[tool_name]
             print(f"Using cached tool instance for: {tool_name}")
         else:
+            if tool_name == "Parallel_Search_Tool":
+                return "Error: Parallel_Search_Tool is not enabled."
             # Fallback: Import the tool module and instantiate it
             print(f"Warning: Tool '{tool_name}' not found in cache, instantiating with default parameters")
 

@@ -9,6 +9,7 @@ from agentflow.models.verifier import Verifier
 from agentflow.models.memory import Memory
 from agentflow.models.executor import Executor
 from agentflow.models.utils import make_json_serializable_truncated
+from agentflow.tools.parallel_search.context import search_run
 
 class Solver:
     def __init__(
@@ -39,6 +40,10 @@ class Solver:
         assert all(output_type in ["base", "final", "direct"] for output_type in self.output_types), "Invalid output type. Supported types are 'base', 'final', 'direct'."
         self.verbose = verbose
     def solve(self, question: str, image_path: Optional[str] = None):
+        with search_run():
+            return self._solve(question, image_path)
+
+    def _solve(self, question: str, image_path: Optional[str] = None):
         """
         Solve a single problem from the benchmark dataset.
         
@@ -196,7 +201,7 @@ class Solver:
         return json_data
 
 def construct_solver(llm_engine_name : str = "gpt-4o",
-                     enabled_tools : list[str] = ["all"],
+                     enabled_tools : Optional[list[str]] = None,
                      tool_engine: list[str] = ["Default"],
                      model_engine: list[str] = ["trainable", "gpt-4o", "gpt-4o", "gpt-4o"],  # [planner_main, planner_fixed, verifier, executor]
                      output_types : str = "final,direct",

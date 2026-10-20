@@ -8,6 +8,24 @@ import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import multiprocessing
 
+
+def default_tools():
+    """Keep configured Google search; make unconfigured web search anonymous."""
+    from dotenv import load_dotenv
+
+    load_dotenv()
+    search_tool = (
+        "Google_Search_Tool" if os.getenv("GOOGLE_API_KEY") else "Parallel_Search_Tool"
+    )
+    return [
+        "Base_Generator_Tool",
+        "Python_Coder_Tool",
+        search_tool,
+        "Web_Search_Tool",
+        "Wikipedia_Search_Tool",
+    ]
+
+
 def _get_optimal_workers(max_workers: int = None) -> tuple[int, str]:
     """
     Intelligently determine optimal number of worker threads based on:
@@ -93,7 +111,7 @@ class Initializer:
         """
         self.toolbox_metadata = {}
         self.available_tools = []
-        self.enabled_tools = enabled_tools
+        self.enabled_tools = default_tools() if enabled_tools is None else enabled_tools
         self.tool_engine = tool_engine
         self.load_all = self.enabled_tools == ["all"]
         self.model_string = model_string
@@ -526,4 +544,3 @@ if __name__ == "__main__":
     print(f"Speedup:          {serial_time/parallel_time:>6.2f}x")
     print(f"Time saved:       {serial_time - parallel_time:>6.2f}s")
     print("="*80)
-    

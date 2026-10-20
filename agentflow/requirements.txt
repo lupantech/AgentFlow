@@ -11,6 +11,8 @@ pillow==11.1.0
 platformdirs==4.3.6
 pymed==0.8.9
 python-dotenv==1.0.1
+httpx>=0.27,<1
+mcp>=1.30,<2
 sympy==1.13.1
 tenacity==9.0.0
 wikipedia==1.4.0
